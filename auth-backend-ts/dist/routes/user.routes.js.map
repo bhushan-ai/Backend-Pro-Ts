@@ -1,0 +1,1 @@
+{"version":3,"file":"user.routes.js","sourceRoot":"","sources":["../../src/routes/user.routes.ts"],"names":[],"mappings":";;;;;AAAA,sDAA8B;AAC9B,oEAAyE;AAEzE,MAAM,UAAU,GAAG,iBAAO,CAAC,MAAM,EAAE,CAAC;AAEpC,UAAU,CAAC,IAAI,CAAC,WAAW,EAAE,0BAAQ,CAAC,CAAC;AACvC,UAAU,CAAC,IAAI,CAAC,QAAQ,EAAE,uBAAK,CAAC,CAAC;AACjC,UAAU,CAAC,IAAI,CAAC,SAAS,EAAE,wBAAM,CAAC,CAAC;AAEnC,kBAAe,UAAU,CAAC"}
