@@ -99,6 +99,7 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+    res.status(200).json({ success: true, message: "loggedOut Successfully" });
   } catch (error: unknown) {
     const err = error as Error;
     console.log(`Something went wrong while registration`, err);
