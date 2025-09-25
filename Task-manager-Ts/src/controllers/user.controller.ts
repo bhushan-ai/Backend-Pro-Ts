@@ -83,18 +83,21 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-    
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "User LoggedIn",
-        data: user,
-        token: token,
-      });
+
+    res.status(200).json({
+      success: true,
+      message: "User LoggedIn",
+      data: user,
+      token: token,
+    });
   } catch (error: unknown) {
     const err = error as Error;
     console.log(`Something went wrong while registration`, err);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: err.message,
+    });
   }
 };
 export const logout = async (req: Request, res: Response): Promise<void> => {
@@ -109,6 +112,99 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
   } catch (error: unknown) {
     const err = error as Error;
     console.log(`Something went wrong while registration`, err);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: err.message,
+    });
   }
 };
 
+//update user
+export const updateUser = async (req: Request, res: Response) => {
+  try {
+    const { name, email } = req.body;
+    if (!name || !email) {
+      res
+        .status(400)
+        .json({ success: false, message: "All fields are required" });
+      return;
+    }
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user?._id,
+      {
+        email,
+        name,
+      },
+      { new: true }
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Details updated successfully",
+      data: updatedUser,
+    });
+  } catch (error: unknown) {
+    const err = error as Error;
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: err.message,
+    });
+  }
+};
+
+//password updated
+export const updatePassword = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+
+    if (!oldPassword) {
+      res
+        .status(400)
+        .json({ success: false, message: " current password required" });
+      return;
+    }
+    if (!newPassword) {
+      res
+        .status(400)
+        .json({ success: false, message: "new password required" });
+      return;
+    }
+
+    //fetching user
+    const user = await User.findById(req.user?._id);
+    if (!user) {
+      res.status(404).json({ success: false, message: "User not found" });
+      return;
+    }
+
+    //compare  password
+    const matchedPassword = await bcrypt.compare(oldPassword, user.password);
+
+    if (!matchedPassword) {
+      res
+        .status(400)
+        .json({ success: false, message: " current password is incorrect" });
+      return;
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: "password updated successfully",
+    });
+  } catch (error: unknown) {
+    const err = error as Error;
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: err.message,
+    });
+  }
+};
