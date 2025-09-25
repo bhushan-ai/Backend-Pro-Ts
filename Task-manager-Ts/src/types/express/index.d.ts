@@ -1,5 +1,5 @@
-import { ITask } from "../../models/task.model";
 import { IUser } from "../../models/user.model";
+import { ITask } from "../../models/task.model";
 
 declare global {
   namespace Express {

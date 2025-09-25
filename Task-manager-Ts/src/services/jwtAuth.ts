@@ -7,7 +7,8 @@ export const JwtAuth = async (
   res: Response,
   next: NextFunction
 ): Promise<void> => {
-  const { token } = req.cookies.token;
+  const token = req.cookies?.token;
+  
   try {
     if (!token) {
       res.status(400).json({ success: false, message: "No token" });
@@ -18,7 +19,7 @@ export const JwtAuth = async (
       id: string;
     };
 
-    const user = await User.findById(decodedToken);
+    const user = await User.findById(decodedToken.id).select("-password");
 
     if (!user) {
       res.status(400).json({ success: false, message: "user not found" });

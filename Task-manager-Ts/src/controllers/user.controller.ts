@@ -83,9 +83,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+    
     res
       .status(200)
-      .json({ success: true, message: "User LoggedIn", data: user });
+      .json({
+        success: true,
+        message: "User LoggedIn",
+        data: user,
+        token: token,
+      });
   } catch (error: unknown) {
     const err = error as Error;
     console.log(`Something went wrong while registration`, err);
@@ -105,3 +111,4 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
     console.log(`Something went wrong while registration`, err);
   }
 };
+

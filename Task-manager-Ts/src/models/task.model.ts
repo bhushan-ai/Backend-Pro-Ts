@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
 export interface ITask {
+
   title: string;
   description: string;
   dueDate: Date;
@@ -31,4 +32,4 @@ const taskSchema = new Schema<ITask>({
 
 const Task = mongoose.model<ITask>("Task", taskSchema);
 
-export default Task
+export default Task;
