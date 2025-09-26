@@ -6,26 +6,37 @@ Welcome to **Backend-Pro-Ts** — a curated collection of backend projects built
 
 Each folder in this repository represents a distinct backend project, demonstrating various concepts and technologies:
 
-- **auth-backend-ts**: A user authentication system featuring:
-  - JWT-based authentication
-  - Role-based access control
-  - Secure password hashing with bcrypt
-  - MongoDB integration using Mongoose
+### 🔑 **auth-backend-ts**
+A user authentication system featuring:
+- JWT-based authentication  
+- Role-based access control  
+- Secure password hashing with **bcrypt**  
+- MongoDB integration using **Mongoose**  
 
-Feel free to explore each project for detailed insights and implementations.
+### ✅ **task-manager-ts**
+A task management system built with **TypeScript + Express + MongoDB**.  
+Features:
+- User authentication with **JWT & cookies**  
+- CRUD operations for tasks  
+- Secure password update flow  
+- Task ownership enforcement (tasks are linked to the logged-in user)  
+- Proper validation & error handling  
 
+---
 ## 🛠️ Technologies Used
 
 The projects in this repository utilize a range of modern backend technologies:
 
-- **Node.js**: JavaScript runtime for building scalable server-side applications.
-- **Express.js**: Web framework for building RESTful APIs.
-- **TypeScript**: Superset of JavaScript that adds static typing.
-- **Mongoose**: MongoDB object modeling tool.
-- **bcrypt**: Library for hashing passwords.
-- **jsonwebtoken (JWT)**: For secure token-based authentication.
-- **dotenv**: Loads environment variables from a `.env` file.
-- **nodemon**: Utility that monitors for changes in files and automatically restarts the server.
+- **Node.js** → JavaScript runtime for building scalable server-side apps  
+- **Express.js** → Web framework for building RESTful APIs  
+- **TypeScript** → Superset of JavaScript with static typing  
+- **Mongoose** → MongoDB object modeling tool  
+- **bcrypt** → Password hashing library  
+- **jsonwebtoken (JWT)** → Secure token-based authentication  
+- **dotenv** → Manage environment variables  
+- **cookie-parser** → Handle cookies in Express  
+- **nodemon** → Auto-restart server on code changes  
+
 
 ## 📦 Installation & Setup
 
