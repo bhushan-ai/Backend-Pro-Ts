@@ -3,6 +3,7 @@ import express, { Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/user.route";
 import { dbConnection } from "./services/dbConnection";
+import noteRouter from "./routes/notes.route";
 const PORT = process.env.PORT || 4000;
 
 const app = express();
@@ -16,6 +17,7 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Api is running fine");
 });
 app.use("/api/user", userRouter);
+app.use("/api/note", noteRouter);
 
 //Db connection
 dbConnection()
