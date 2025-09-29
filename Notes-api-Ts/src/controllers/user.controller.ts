@@ -116,14 +116,93 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+//updated user
 export const updateUser = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
+    if (!req.user) {
+      res.status(404).json({ success: false, message: "user not found" });
+      return;
+    }
+    const id: string = req.user?._id;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      {
+        ...req?.body,
+      },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      res.status(404).json({ success: false, message: "User not updated" });
+      return;
+    }
+    res
+      .status(200)
+      .json({ success: true, message: "user updated", data: updatedUser });
   } catch (error: unknown) {
     const err = error as Error;
-    console.log(`something went wrong while registering the user`, err);
+    console.log(`something went wrong while updating user the user`, err);
+    res
+      .status(500)
+      .json({ success: false, message: "Server side error", error: err });
+  }
+};
+
+//reset  password
+export const resetPassword = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+    if (!req.user) {
+      res.status(404).json({ success: false, message: "user not found" });
+      return;
+    }
+    const id: string = req.user?._id;
+
+    if (!oldPassword) {
+      res
+        .status(400)
+        .json({ success: false, message: "old password is required" });
+      return;
+    }
+
+    if (!newPassword) {
+      res
+        .status(400)
+        .json({ success: false, message: "new password is  required" });
+      return;
+    }
+
+    const user = await User.findById(id);
+    if (!user) {
+      res.status(404).json({ success: false, message: "user not found" });
+      return;
+    }
+    const oPassword = user?.password as string;
+
+    const compare = await bcrypt.compare(oldPassword, oPassword);
+
+    if (!compare) {
+      res
+        .status(402)
+        .json({ success: false, message: "old password is incorrect" });
+      return;
+    }
+
+    const hashPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashPassword;
+    await user?.save();
+
+    res.status(200).json({ success: true, message: "user password changed" });
+  } catch (error: unknown) {
+    const err = error as Error;
+    console.log(`something went wrong while resetting password `, err);
     res
       .status(500)
       .json({ success: false, message: "Server side error", error: err });
