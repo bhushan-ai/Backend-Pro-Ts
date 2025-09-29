@@ -77,9 +77,26 @@ export const getAllNote = async (
   res: Response
 ): Promise<void> => {
   try {
+    if (!req.user) {
+      res.status(404).json({ success: false, message: "user not found" });
+      return;
+    }
+    const id: string = req.user?._id;
+
+    const allNotes = await Note.find({ createdBy: id }).select(
+      "title content tags"
+    );
+
+    if (allNotes === null) {
+      res.status(404).json({ success: false, message: "There is no note" });
+      return;
+    }
+    res
+      .status(200)
+      .json({ success: true, message: "all notes", data: allNotes });
   } catch (error: unknown) {
     const err = error as Error;
-    console.log(`something went wrong while creating note `, err);
+    console.log(`something went wrong while fetching note `, err);
     res.status(500).json({
       success: false,
       message: "Something went wrong in server",
