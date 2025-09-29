@@ -25,6 +25,12 @@ export const addNote = async (req: Request, res: Response): Promise<void> => {
       createdBy: req.user._id,
     });
 
+    if (!note) {
+      res.status(500).json({
+        success: false,
+        message: "Something went wrong while creating note",
+      });
+    }
     res.status(201).json({
       success: true,
       message: "Note created",
@@ -105,7 +111,49 @@ export const getAllNote = async (
   }
 };
 
-//update Note
+//search  the note
+export const searchNote = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    if (!req.user) {
+      res.status(404).json({ success: false, message: "user not found" });
+      return;
+    }
+    const id: string = req.user?._id;
+    const q = req.query.q as string;
+
+    const searchedNotes = await Note.find({
+      createdBy: id,
+      $or: [
+        { title: { $regex: q, $options: "i" } },
+        { content: { $regex: q, $options: "i" } },
+        { tags: { $regex: q, $options: "i" } },
+      ],
+    }).select("title content tags");
+
+    if (!searchedNotes) {
+      res.status(404).json({
+        success: false,
+        message: `${searchedNotes} not found`,
+        data: searchedNotes,
+      });
+      return;
+    }
+    res.status(200).json({ success: true, message: "notes fetched" });
+  } catch (error: unknown) {
+    const err = error as Error;
+    console.log(`something went wrong while creating note `, err);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong in server",
+      err: err,
+    });
+  }
+};
+
+//update Note //todo
 export const updateNote = async (
   req: Request,
   res: Response
@@ -125,9 +173,66 @@ export const updateNote = async (
 //delete the note
 export const deleteNote = async (req: Request, res: Response) => {
   try {
+    const { id: noteId } = req.params;
+
+    if (!noteId) {
+      res.status(400).json({ success: false, message: "Id not found" });
+      return;
+    }
+    const deletedNote = await Note.findByIdAndUpdate(
+      noteId,
+      {
+        isDeleted: true,
+      },
+      { new: true }
+    );
+    if (!deletedNote) {
+      res.status(400).json({ success: false, message: "Note not deleted" });
+      return;
+    }
+    res.status(200).json({
+      success: true,
+      message: "Note deleted",
+    });
   } catch (error: unknown) {
     const err = error as Error;
-    console.log(`something went wrong while creating note `, err);
+    console.log(`something went wrong while deleting note `, err);
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong in server",
+      err: err,
+    });
+  }
+};
+
+//restore the note
+export const restoreNote = async (req: Request, res: Response) => {
+  try {
+    const { id: noteId } = req.params;
+
+    if (!noteId) {
+      res.status(400).json({ success: false, message: "Id not found" });
+      return;
+    }
+    const restoreNote = await Note.findByIdAndUpdate(
+      noteId,
+      {
+        isDeleted: false,
+      },
+      { new: true }
+    );
+    if (!restoreNote) {
+      res.status(400).json({ success: false, message: "Note not restore" });
+      return;
+    }
+    res.status(200).json({
+      success: true,
+      message: "Note restored",
+      data: restoreNote,
+    });
+  } catch (error: unknown) {
+    const err = error as Error;
+    console.log(`something went wrong while restoring note `, err);
     res.status(500).json({
       success: false,
       message: "Something went wrong in server",
