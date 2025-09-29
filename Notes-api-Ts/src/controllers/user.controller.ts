@@ -84,7 +84,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
       sameSite: process.env.NODE_ENV == "production" ? "none" : "strict",
       maxAge: 4 * 24 * 60 * 60 * 1000,
     });
-    res.status(201).json({ success: true, message: "LoggedIn successfully" });
+    res
+      .status(201)
+      .json({ success: true, message: "LoggedIn successfully", token: token });
   } catch (error: unknown) {
     const err = error as Error;
     console.log(`something went wrong while login the user`, err);

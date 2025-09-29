@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Note from "../models/notes.model";
 import User from "../models/user.model";
+import { isDataView } from "util/types";
 
 //adding note
 export const addNote = async (req: Request, res: Response): Promise<void> => {
@@ -56,7 +57,7 @@ export const getNote = async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const note = await User.findById(noteId);
+    const note = await Note.findById(noteId);
     if (!note) {
       res.status(404).json({ success: false, message: "Note not found" });
       return;
@@ -141,7 +142,9 @@ export const searchNote = async (
       });
       return;
     }
-    res.status(200).json({ success: true, message: "notes fetched" });
+    res
+      .status(200)
+      .json({ success: true, message: "notes fetched", data: searchedNotes });
   } catch (error: unknown) {
     const err = error as Error;
     console.log(`something went wrong while creating note `, err);
@@ -153,12 +156,34 @@ export const searchNote = async (
   }
 };
 
-//update Note //todo
+//update Note
 export const updateNote = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
+    const { id: noteId } = req.params;
+
+    if (!noteId) {
+      res.status(400).json({ success: false, message: "Id not found" });
+      return;
+    }
+
+    const updatedNote = await Note.findByIdAndUpdate(
+      noteId,
+      {
+        ...req?.body,
+      },
+      { new: true }
+    );
+
+    if (!updatedNote) {
+      res.status(404).json({ success: false, message: "Note not updated" });
+      return;
+    }
+    res
+      .status(200)
+      .json({ success: true, message: "note updated", data: updatedNote });
   } catch (error: unknown) {
     const err = error as Error;
     console.log(`something went wrong while creating note `, err);

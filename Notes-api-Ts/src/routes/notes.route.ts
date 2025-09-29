@@ -7,6 +7,7 @@ import {
   getNote,
   restoreNote,
   searchNote,
+  updateNote,
 } from "../controllers/notes.controller";
 
 const noteRouter = express.Router();
@@ -17,5 +18,6 @@ noteRouter.get("/getall", jwtAuth, getAllNote);
 noteRouter.get("/search", jwtAuth, searchNote);
 noteRouter.put("/delete/:id", jwtAuth, deleteNote);
 noteRouter.put("/restore/:id", jwtAuth, restoreNote);
+noteRouter.put("/update/:id", jwtAuth, updateNote);
 
 export default noteRouter;
