@@ -8,10 +8,11 @@ export interface ICart {
   }[];
 }
 
-const cartSchema = new Schema({
+const cartSchema = new Schema<ICart>({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+    required: true,
   },
   items: [
     {
