@@ -1,14 +1,26 @@
 import "dotenv/config";
 import express, { Request, Response } from "express";
 import { dbConnection } from "./services/dbConnection";
+import cookieParser from "cookie-parser";
+import userRouter from "./routes/auth-user/user.route";
+import productRouter from "./routes/admin/product.route";
 
 const PORT = 4000;
 const app = express();
+
+//middlewares
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 
 //routes
 app.get("/", (req: Request, res: Response) => {
   res.send("Api is running fine");
 });
+
+app.use("/api/user", userRouter);
+app.use("/api/product", productRouter);
+
 
 dbConnection()
   .then(() => {
