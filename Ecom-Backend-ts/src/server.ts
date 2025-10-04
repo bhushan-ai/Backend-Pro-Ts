@@ -4,6 +4,7 @@ import { dbConnection } from "./services/dbConnection";
 import cookieParser from "cookie-parser";
 import userRouter from "./routes/auth-user/user.route";
 import productRouter from "./routes/admin/product.route";
+import shopProducts from "./routes/shop/allProducts.route";
 
 const PORT = 4000;
 const app = express();
@@ -19,7 +20,11 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/user", userRouter);
+//admin
 app.use("/api/product", productRouter);
+//user
+app.use("/api/products", shopProducts);
+
 
 
 dbConnection()

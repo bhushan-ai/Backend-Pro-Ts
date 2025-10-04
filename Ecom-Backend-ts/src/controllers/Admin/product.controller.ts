@@ -141,7 +141,7 @@ export const editProduct = async (
     if (user?.role !== "Admin") {
       res.status(404).json({
         success: false,
-        message: "You can not add the product because you are not admin",
+        message: "You can not edit the product because you are not admin",
       });
       return;
     }
@@ -206,3 +206,67 @@ export const editProduct = async (
       .json({ success: false, message: "Server side error", error: err });
   }
 };
+
+//delete the product
+export const deleteProduct = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    //check user
+    if (!req.user) {
+      res.status(404).json({ success: false, message: "User not found" });
+      return;
+    }
+
+    //check user id
+    const userId = req.user?._id;
+    if (!userId) {
+      res.status(404).json({ success: false, message: "User Id not found" });
+    }
+
+    //find user
+    const user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ success: false, message: "User not found in Db" });
+      return;
+    }
+
+    //find user admin or not
+    if (user?.role !== "Admin") {
+      res.status(404).json({
+        success: false,
+        message: "You can not delete the product because you are not admin",
+      });
+      return;
+    }
+
+    //get id
+    const { id: productId } = req.params;
+
+    //check product id
+    if (!productId) {
+      res.status(400).json({ success: false, message: "Id not found" });
+      return;
+    }
+
+    const deletedProduct = await Product.findByIdAndDelete(productId);
+
+    if (!deletedProduct) {
+      res.status(404).json({ success: false, message: "product not deleted" });
+      return;
+    }
+
+    res.status(201).json({
+      success: true,
+      message: "product deleted successfully",
+    });
+  } catch (error: unknown) {
+    const err = error as Error;
+    console.log(`Something went wrong while deleting the product`, err);
+    res
+      .status(500)
+      .json({ success: false, message: "Server side error", error: err });
+  }
+};
+

@@ -15,5 +15,7 @@ productRouter.post("/image-upload", upload.single("my_img"), handleImage);
 
 productRouter.post("/add", jwtAuth, addProduct);
 productRouter.post("/edit/:id", jwtAuth, editProduct);
+productRouter.delete("/delete/:id", jwtAuth, editProduct);
+
 
 export default productRouter;
