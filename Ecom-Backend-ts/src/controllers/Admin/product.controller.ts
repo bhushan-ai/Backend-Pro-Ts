@@ -42,23 +42,25 @@ export const addProduct = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const { name, description, price, salePrice, stock } = req.body;
-
   try {
+    //check user
     if (!req.user) {
       res.status(404).json({ success: false, message: "User not found" });
     }
 
+    //check user id
     const userId = req.user?._id;
     if (!userId) {
       res.status(404).json({ success: false, message: "User Id not found" });
     }
 
+    //find user
     const user = await User.findById(userId);
     if (!user) {
       res.status(404).json({ success: false, message: "User not found in Db" });
     }
 
+    //find user admin or not
     if (user?.role !== "Admin") {
       res.status(404).json({
         success: false,
@@ -66,7 +68,37 @@ export const addProduct = async (
       });
     }
 
-    const product = new Product({});
+    //get the product info
+    const { name, description, image, price, salePrice, stock, categoryId } =
+      req.body;
+
+    if (
+      !name ||
+      !description ||
+      !image ||
+      !price ||
+      !salePrice ||
+      !stock ||
+      !categoryId
+    ) {
+      res.status(400).json({ success: false, message: "All info required" });
+    }
+
+    const product = new Product({
+      name,
+      description,
+      image,
+      price,
+      salePrice,
+      stock,
+      categoryId,
+    });
+
+    await product.save();
+
+    res
+      .status(201)
+      .json({ success: true, message: "Product added", data: product });
   } catch (error: unknown) {
     const err = error as Error;
     console.log(`Something went wrong while registering the user`, err);
