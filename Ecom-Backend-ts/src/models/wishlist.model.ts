@@ -5,7 +5,6 @@ export interface IWish {
   products: {
     productId: mongoose.Schema.Types.ObjectId;
   }[];
-  subTotal: number;
 }
 
 const wishSchema = new Schema<IWish>({
@@ -23,11 +22,6 @@ const wishSchema = new Schema<IWish>({
       },
     },
   ],
-  subTotal: {
-    type: Number,
-    default: 0,
-    required: true,
-  },
 });
 
 const Wishlist = mongoose.model<IWish>("Wishlist", wishSchema);

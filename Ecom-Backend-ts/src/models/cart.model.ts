@@ -6,6 +6,7 @@ export interface ICart {
     productId: mongoose.Schema.Types.ObjectId;
     quantity: number;
   }[];
+  subTotal: number;
 }
 
 const cartSchema = new Schema<ICart>({
@@ -27,6 +28,11 @@ const cartSchema = new Schema<ICart>({
       },
     },
   ],
+  subTotal: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
 });
 
 const Cart = mongoose.model<ICart>("Cart", cartSchema);
