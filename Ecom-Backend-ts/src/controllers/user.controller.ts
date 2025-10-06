@@ -122,15 +122,106 @@ export const logout = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-//update
+//update user
 export const updateUser = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   try {
+    const { name, email } = req.body;
+
+    if (!email || !name) {
+      res
+        .status(400)
+        .json({ success: false, message: "all fields are required" });
+      return;
+    }
+
+    const userId = req.user?._id;
+
+    if (!userId) {
+      res.status(404).json({ success: false, message: "userId not found" });
+      return;
+    }
+
+    let user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ success: false, message: "user not found" });
+      return;
+    }
+
+    user.name = name || user.name;
+    user.email = email || user.email;
+    await user.save();
+
+    res
+      .status(200)
+      .json({ success: true, message: "user details updated", data: user });
+    return;
   } catch (error: unknown) {
     const err = error as Error;
-    console.log(`Something went wrong while registering the user`, err);
+    console.log(`Something went wrong while updating the user`, err);
+    res
+      .status(500)
+      .json({ success: false, message: "Server side error", error: err });
+  }
+};
+
+//updated password
+export const updatePassword = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { oldPassword, newPassword } = req.body;
+
+    if (!oldPassword) {
+      res
+        .status(400)
+        .json({ success: false, message: "old password required" });
+      return;
+    }
+    if (!newPassword) {
+      res
+        .status(400)
+        .json({ success: false, message: "new password required" });
+      return;
+    }
+
+    const userId = req.user?._id;
+
+    if (!userId) {
+      res.status(404).json({ success: false, message: "userId not found" });
+      return;
+    }
+
+    let user = await User.findById(userId);
+    if (!user) {
+      res.status(404).json({ success: false, message: "user not found" });
+      return;
+    }
+
+    const oPass = user.password;
+
+    const matchPass = await bcrypt.compare(oldPassword, oPass);
+
+    if (!matchPass) {
+      res
+        .status(402)
+        .json({ success: false, message: "old password is incorrect" });
+      return;
+    }
+
+    const hashedPass = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPass || user.password;
+    await user.save();
+
+    res.status(200).json({ success: true, message: "user password updated" });
+    return;
+  } catch (error: unknown) {
+    const err = error as Error;
+    console.log(`Something went wrong while updating the user password`, err);
     res
       .status(500)
       .json({ success: false, message: "Server side error", error: err });
