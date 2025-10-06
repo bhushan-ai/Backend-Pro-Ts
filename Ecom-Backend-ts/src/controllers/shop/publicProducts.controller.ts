@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import Product from "../../models/product.model";
 
+//get all products
 export const getAllProducts = async (
   req: Request,
   res: Response
