@@ -269,4 +269,3 @@ export const deleteProduct = async (
       .json({ success: false, message: "Server side error", error: err });
   }
 };
-

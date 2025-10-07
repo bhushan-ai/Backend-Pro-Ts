@@ -6,6 +6,7 @@ import userRouter from "./routes/auth-user/user.route";
 import productRouter from "./routes/admin/product.route";
 import shopProducts from "./routes/user/allProducts.route";
 import wishlistProducts from "./routes/user/user.wishlist.route";
+import categoryRouter from "./routes/admin/addCategory.route";
 
 const PORT = 4000;
 const app = express();
@@ -21,8 +22,10 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/user", userRouter);
-//admin
+//admin & category
 app.use("/api/product", productRouter);
+app.use("/api/product-category", categoryRouter);
+
 //user
 app.use("/api/products", shopProducts);
 //user wishlist
