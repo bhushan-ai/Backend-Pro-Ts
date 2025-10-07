@@ -1,3 +1,4 @@
+import { NextFunction } from "express";
 import mongoose, { Schema } from "mongoose";
 
 export interface ICart {
@@ -33,6 +34,16 @@ const cartSchema = new Schema<ICart>({
     default: 0,
     required: true,
   },
+});
+
+cartSchema.pre("save", async function (next) {
+  let total = 0;
+  for (const item of this.items) {
+    const product = await mongoose.model("Product").findById(item.productId);
+    if (product) total += product.price * item.quantity;
+  }
+  this.subTotal = total;
+  next();
 });
 
 const Cart = mongoose.model<ICart>("Cart", cartSchema);
