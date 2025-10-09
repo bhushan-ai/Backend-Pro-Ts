@@ -44,19 +44,50 @@ export const addToCart = async (req: Request, res: Response): Promise<void> => {
     } else {
       cart.items[findCurrentIndexOfProduct].quantity += quantity;
     }
-
+    await cart.save();
     res
       .status(201)
       .json({ success: true, message: "product added to cart", data: cart });
   } catch (error: unknown) {
     const err = error as Error;
-    console.log(`Something went wrong while fetching the product`, err);
+    console.log(`Something went wrong while adding the product to cart`, err);
     res
       .status(500)
       .json({ success: false, message: "Server side error", error: err });
   }
 };
 
-export const fetchItemsOfCart = async  (req:Request,res:Response):Promise<void> =>{
-  
-}
+
+//fetch items
+export const fetchItemsOfCart = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    if (!req.user) {
+      res.status(404).json({ success: false, message: "User not found" });
+      return;
+    }
+
+    const id = req.user._id;
+    if (!id) {
+      res.status(404).json({ success: false, message: "id not found" });
+      return;
+    }
+
+    const cart = await Cart.findOne({ user: id }).populate({
+      path: "items.productId",
+      select: "name image price salePrice",
+    });
+    
+  } catch (error: unknown) {
+    const err = error as Error;
+    console.log(
+      `Something went wrong while fetching the products of cart`,
+      err
+    );
+    res
+      .status(500)
+      .json({ success: false, message: "Server side error", error: err });
+  }
+};
