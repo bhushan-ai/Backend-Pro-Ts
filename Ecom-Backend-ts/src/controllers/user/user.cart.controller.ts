@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import Cart from "../../models/cart.model";
-import mongoose from "mongoose";
 import Product from "../../models/product.model";
 
 export const addToCart = async (req: Request, res: Response): Promise<void> => {
@@ -58,9 +57,6 @@ export const addToCart = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-// if (!cart) {
-//   res
-//     .status(401)
-//     .json({ success: false, message: "product is not added to cart" });
-//   return;
-// }
+export const fetchItemsOfCart = async  (req:Request,res:Response):Promise<void> =>{
+  
+}
