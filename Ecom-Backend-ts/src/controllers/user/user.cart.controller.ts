@@ -24,7 +24,7 @@ export const addToCart = async (req: Request, res: Response): Promise<void> => {
 
     let cart = await Cart.findOne({ user: id });
     if (cart) {
-    //   cart.items.push({ pId } ,{quantity: +1});
+      //   cart.items.push({ pId } ,{quantity: +1});
     }
 
     if (!cart) {
