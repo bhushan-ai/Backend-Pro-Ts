@@ -1,13 +1,22 @@
 import { Request, Response } from "express";
 import Cart from "../../models/cart.model";
 import mongoose from "mongoose";
+import Product from "../../models/product.model";
 
 export const addToCart = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id: pId } = req.params;
+    const { pId, quantity } = req.body;
 
     if (!pId) {
       res.status(404).json({ success: false, message: "productId not found" });
+      return;
+    }
+
+    //check product exist or not
+    const product = await Product.findById(pId);
+
+    if (!product) {
+      res.status(404).json({ success: false, message: "product not found" });
       return;
     }
 
@@ -23,16 +32,20 @@ export const addToCart = async (req: Request, res: Response): Promise<void> => {
     }
 
     let cart = await Cart.findOne({ user: id });
-    if (cart) {
-      //   cart.items.push({ pId } ,{quantity: +1});
+    if (!cart) {
+      cart = new Cart({ user: id, items: [] });
     }
 
-    if (!cart) {
-      res
-        .status(401)
-        .json({ success: false, message: "product is not added to cart" });
-      return;
+    const findCurrentIndexOfProduct = cart.items.findIndex(
+      (index) => index.productId.toString() === pId
+    );
+
+    if (findCurrentIndexOfProduct === -1) {
+      cart.items.push({ productId: pId, quantity });
+    } else {
+      cart.items[findCurrentIndexOfProduct].quantity += quantity;
     }
+
     res
       .status(201)
       .json({ success: true, message: "product added to cart", data: cart });
@@ -44,3 +57,10 @@ export const addToCart = async (req: Request, res: Response): Promise<void> => {
       .json({ success: false, message: "Server side error", error: err });
   }
 };
+
+// if (!cart) {
+//   res
+//     .status(401)
+//     .json({ success: false, message: "product is not added to cart" });
+//   return;
+// }
