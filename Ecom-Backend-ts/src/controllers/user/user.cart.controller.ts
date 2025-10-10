@@ -57,7 +57,6 @@ export const addToCart = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-
 //fetch items
 export const fetchItemsOfCart = async (
   req: Request,
@@ -79,7 +78,10 @@ export const fetchItemsOfCart = async (
       path: "items.productId",
       select: "name image price salePrice",
     });
-    
+
+    res
+      .status(200)
+      .json({ success: true, message: "All product fetched", data: cart });
   } catch (error: unknown) {
     const err = error as Error;
     console.log(
