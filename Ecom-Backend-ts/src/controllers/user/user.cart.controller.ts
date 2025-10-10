@@ -79,6 +79,8 @@ export const fetchItemsOfCart = async (
       select: "name image price salePrice",
     });
 
+    
+
     res
       .status(200)
       .json({ success: true, message: "All product fetched", data: cart });
