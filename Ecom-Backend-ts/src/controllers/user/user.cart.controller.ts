@@ -79,8 +79,6 @@ export const fetchItemsOfCart = async (
       select: "name image price salePrice",
     });
 
-    
-
     res
       .status(200)
       .json({ success: true, message: "All product fetched", data: cart });
@@ -88,6 +86,24 @@ export const fetchItemsOfCart = async (
     const err = error as Error;
     console.log(
       `Something went wrong while fetching the products of cart`,
+      err
+    );
+    res
+      .status(500)
+      .json({ success: false, message: "Server side error", error: err });
+  }
+};
+
+//remove cart item
+export const removeItemFromCart = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+  } catch (error: unknown) {
+    const err = error as Error;
+    console.log(
+      `Something went wrong while removing the products from cart`,
       err
     );
     res
