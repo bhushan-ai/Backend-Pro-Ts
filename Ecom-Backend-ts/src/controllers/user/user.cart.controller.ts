@@ -101,17 +101,17 @@ export const removeItemFromCart = async (
 ): Promise<void> => {
   try {
     //user check
-     if (!req.user) {
+    if (!req.user) {
       res.status(404).json({ success: false, message: "User not found" });
       return;
     }
 
     const id = req.user._id;
+    //id check
     if (!id) {
       res.status(404).json({ success: false, message: "id not found" });
       return;
     }
-    
   } catch (error: unknown) {
     const err = error as Error;
     console.log(
