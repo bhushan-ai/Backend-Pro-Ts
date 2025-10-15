@@ -1,6 +1,6 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
-export interface IWish {
+export interface IWish extends Document {
   user: mongoose.Schema.Types.ObjectId;
   products: {
     productId: mongoose.Schema.Types.ObjectId;

@@ -1,7 +1,8 @@
 import { NextFunction } from "express";
 import mongoose, { Schema } from "mongoose";
+import { Document } from "mongoose";
 
-export interface ICart {
+export interface ICart extends Document {
   user: mongoose.Schema.Types.ObjectId;
   items: {
     productId: mongoose.Schema.Types.ObjectId;

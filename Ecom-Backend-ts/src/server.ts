@@ -7,7 +7,6 @@ import productRouter from "./routes/admin/product.route";
 import shopProducts from "./routes/user/allProducts.route";
 import wishlistProducts from "./routes/user/user.wishlist.route";
 import categoryRouter from "./routes/admin/addCategory.route";
-import cartProducts from "./routes/user/user.cart.route";
 import cartRouter from "./routes/user/user.cart.route";
 
 const PORT = 4000;
