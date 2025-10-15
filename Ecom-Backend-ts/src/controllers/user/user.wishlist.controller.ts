@@ -74,10 +74,10 @@ export const removeFromWishlist = async (
     if (!wishlist) {
       res
         .status(402)
-        .json({ success: false, message: "Product is not added to wishlist" });
+        .json({ success: false, message: "Product is not removed from wishlist" });
       return;
     }
-    res.status(201).json({
+    res.status(200).json({
       success: true,
       message: "product removed from wishlist successfully",
       data: wishlist,

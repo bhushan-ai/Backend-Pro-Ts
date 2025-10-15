@@ -100,18 +100,38 @@ export const removeItemFromCart = async (
   res: Response
 ): Promise<void> => {
   try {
+    const { id: productId } = req.body;
+
     //user check
-    if (!req.user) {
+    if (!req.user?._id) {
       res.status(404).json({ success: false, message: "User not found" });
       return;
     }
 
-    const id = req.user._id;
-    //id check
-    if (!id) {
-      res.status(404).json({ success: false, message: "id not found" });
+    if (!productId) {
+      res
+        .status(400)
+        .json({ success: false, message: "Product ID is required" });
       return;
     }
+
+    const cart = await Cart.findOneAndUpdate(
+      { user: req.user._id },
+      { $pull: { items: { productId: productId } } },
+      { new: true }
+    );
+    if (!cart) {
+      res
+        .status(404)
+        .json({ success: false, message: "Product is not removed from cart" });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "product removed from cart successfully",
+      data: cart,
+    });
   } catch (error: unknown) {
     const err = error as Error;
     console.log(
