@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express, { Request, Response } from "express";
 import cookieParser from "cookie-parser";
+import { dbConnection } from "./services/dbconnection";
 const PORT = process.env.PORT || 4000;
 
 const app = express();
@@ -16,17 +17,14 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 //Db connection
-// dbConnection()
-//   .then(() => {
-//     app.listen(PORT, () => {
-//       console.log(`Server is started on http://localhost:${PORT}`);
-//     });
-//   })
-//   .catch((error: unknown) => {
-//     const err = error as Error;
-//     console.log(`Server is not started on http://localhost:${PORT}`, err);
-//   });
 
-app.listen(PORT, () => {
-  console.log(`Server is started on http://localhost:${PORT}`);
-});
+dbConnection()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server is started on http://localhost:${PORT}`);
+    });
+  })
+  .catch((error: unknown) => {
+    const err = error as Error;
+    console.log(`Server is not started on http://localhost:${PORT}`, err);
+  });
