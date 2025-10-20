@@ -68,7 +68,7 @@ export const deleteResume = async (
         
     } catch (error: unknown) {
     const err = error as Error;
-    console.log(`Something went wrong while updating the resume`, err);
+    console.log(`Something went wrong while deleting the resume`, err);
     res
       .status(500)
       .json({ success: false, message: "Server side error", error: err });
