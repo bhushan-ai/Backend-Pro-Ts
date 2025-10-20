@@ -3,6 +3,8 @@ import express, { Request, Response } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import { dbConnection } from "./services/dbconnection";
+import userRouter from "./routes/user.route";
+import resumeRouter from "./routes/resume.route";
 const PORT = process.env.PORT || 4000;
 
 const app = express();
@@ -18,8 +20,11 @@ app.get("/", (req: Request, res: Response) => {
   res.send("Api is running fine");
 });
 
-//Db connection
+//routes
+app.use("/api/user", userRouter);
+app.use("/resume", resumeRouter);
 
+//Db connection
 dbConnection()
   .then(() => {
     app.listen(PORT, () => {
