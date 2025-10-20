@@ -59,3 +59,18 @@ export const updateResume = async (
       .json({ success: false, message: "Server side error", error: err });
   }
 }
+//delete resume 
+export const deleteResume = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+    try {
+        
+    } catch (error: unknown) {
+    const err = error as Error;
+    console.log(`Something went wrong while updating the resume`, err);
+    res
+      .status(500)
+      .json({ success: false, message: "Server side error", error: err });
+  }
+}
