@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 
+//get all orders
 export const allOrders = async (req: Request, res: Response): Promise<void> => {
   try {
       
